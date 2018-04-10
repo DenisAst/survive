@@ -1,0 +1,40 @@
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using UnityEngine;
+
+public class bullet_control : MonoBehaviour {
+    public GameObject player;
+    public GameObject bullet;
+    private int speed_bullet = 30;
+    private double sinX;
+    private double cosY;
+    private float x=0;
+    private float y=0;
+    private float sinXX;
+    private float cosYY;
+
+    // Use this for initialization
+    void Start () {
+        var position = transform.position;
+        x = position.x;
+        y = position.y;
+        var mousePosition = Input.mousePosition;
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition); //положение мыши из экранных в мировые координаты
+        var angle = Vector2.Angle(Vector2.right, mousePosition - transform.position);
+        transform.eulerAngles = new Vector3(0f, 0f, transform.position.y < mousePosition.y ? angle : -angle);
+        sinX = (mousePosition.x - x) / (Math.Sqrt(Math.Pow(mousePosition.x - x, 2) + Math.Pow(mousePosition.y - y, 2)));
+        cosY = (mousePosition.y - y) / (Math.Sqrt(Math.Pow(mousePosition.x - x, 2) + Math.Pow(mousePosition.y - y, 2)));
+        sinXX = (float)sinX;
+        cosYY = (float)cosY;
+ 
+
+    }	
+	// Update is called once per frame
+	void Update () {
+        var position = transform.position;
+        var xx = position.x;
+        var yy = position.y;
+        bullet.transform.position = new Vector3(xx + speed_bullet * Time.deltaTime * sinXX, yy + speed_bullet * Time.deltaTime *cosYY, -1);
+    }
+}
