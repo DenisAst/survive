@@ -1,0 +1,136 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    public int max_HP = 100;
+    public int HP = 100;
+    public float player_speed = 0.2F;
+    public int lvl_player = 1;
+    public GameObject player;
+    public GameObject[] bullet;
+    public Sprite[] sprites;
+    private int nomer_reshim  = 0;
+    private Animator attach;
+    private float speed_animation = 1;
+    private double peresarydka_avtomat = 15;
+ 
+
+
+    // Use this for initialization
+    void Start()
+    {
+       attach = GetComponent<Animator>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        run();//передвижение играока
+        mouse();//поворот к мыши
+        sprite_weapon();//смена оружия
+        Bullet();
+    }
+    void run()
+    {
+        //Передвижение игркоа
+        var position = transform.position;
+        var x = position.x;
+        var y = position.y;
+        var xx = 0;
+        var yy = 0;
+
+        if (Input.GetKey("w"))
+        {
+            yy++;
+
+        }
+        if (Input.GetKey("a"))
+        {
+            xx--;
+
+        }
+        if (Input.GetKey("d"))
+        {
+            xx++;
+        }
+        if (Input.GetKey("s"))
+        {
+            yy--;
+        }
+        transform.position = new Vector3(x + player_speed * Time.deltaTime * xx, y + player_speed * Time.deltaTime * yy, -1);
+    }
+    void mouse()
+    {
+        //Поворот на мышку
+        var mousePosition = Input.mousePosition;
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition); 
+        var angle = Vector2.Angle(Vector2.right, mousePosition - transform.position);
+        transform.eulerAngles = new Vector3(0f, 0f, transform.position.y < mousePosition.y ? angle+10 : -angle+10);
+    }
+    void sprite_weapon()
+    {
+        
+        //смена оружия
+        if (Input.GetKey("1"))
+        {
+            nomer_reshim = 1;
+            attach.Play("entry1");
+        }
+        if (Input.GetKey("2"))
+        {
+            nomer_reshim = 2;
+            attach.Play("entry2");
+        }
+        if (Input.GetKey("3"))
+        {
+            nomer_reshim = 3;
+            attach.Play("entry3");
+        }
+        if (Input.GetKey("4"))
+        {
+            nomer_reshim = 4;
+            attach.Play("entry4");
+        }
+    }
+    void Bullet()
+    {       
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            switch (nomer_reshim)
+            {
+                case 1:
+                    attach.speed = speed_animation;
+                    attach.Play("attack_nosh");
+
+                    break;
+                case 2:
+                    Instantiate(bullet[0], new Vector3(transform.position.x, transform.position.y), Quaternion.identity);
+                    break;
+                case 4:
+                    for (int i = 0; i < 10; i++)
+                    {
+                        Instantiate(bullet[2], new Vector3(transform.position.x, transform.position.y), Quaternion.identity);
+                    }
+                    break;
+            }
+                            
+        }
+        if (nomer_reshim==3)
+        {
+            if (Input.GetMouseButton(0)&&(peresarydka_avtomat>15))
+            {
+                Instantiate(bullet[0], new Vector3(transform.position.x, transform.position.y), Quaternion.identity);
+                peresarydka_avtomat = 0;
+            }
+            peresarydka_avtomat++;
+        }
+
+    }
+    void return_attch()
+    {
+        attach.Play("entry1");
+    }
+}
+
