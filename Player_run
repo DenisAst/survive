@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class player_run : MonoBehaviour {
+    public GameObject player;
+    private float x;
+    private float xx;
+    private float y;
+    private float yy;
+
+    // Use this for initialization
+    void Start () {
+        var position = transform.position;
+         x = position.x;
+         y = position.y;
+         xx = x;
+         yy = y;
+    }
+	
+	// Update is called once per frame
+	void Update () {
+        var position = transform.position;
+        x = position.x;
+        y = position.y;
+        player.GetComponent<Animator>().enabled = true;
+        if (x == xx && y == yy)
+        {
+            player.GetComponent<Animator>().StopPlayback();
+            player.GetComponent<Animator>().enabled = false;
+        }
+        xx = x;
+        yy = y;
+
+    }
+}
